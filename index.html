@@ -1,0 +1,1175 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --paper:#F6F4EC;
+  --paper-dim:#ECE8DC;
+  --card:#FFFEFA;
+  --ink:#1C2430;
+  --ink-soft:#5B6472;
+  --ink-faint:#8B8F92;
+  --line:#D3CCB9;
+  --seal:#2E6F62;
+  --seal-dim:#E4EEEB;
+  --highlight:#E8B93B;
+  --highlight-dim:#FBF1D4;
+  --flag:#B54632;
+  --flag-dim:#F6E4DE;
+  --shadow:0 1px 2px rgba(28,36,48,.07), 0 6px 18px rgba(28,36,48,.06);
+  --radius:3px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Source Serif 4', serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+::selection{background:var(--highlight-dim);}
+
+/* ---------- layout shell ---------- */
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 120px;}
+:focus-visible{outline:2px solid var(--seal); outline-offset:2px;}
+
+/* ---------- header / hero ---------- */
+header.hero{
+  padding:56px 0 34px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:34px;
+  position:relative;
+}
+.kicker{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--seal);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.kicker::before{
+  content:"";
+  width:22px;height:1px;background:var(--seal);display:inline-block;
+}
+h1.title{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:clamp(34px,5vw,52px);
+  line-height:1.02;
+  margin:0 0 14px;
+  letter-spacing:-.01em;
+}
+h1.title em{
+  font-style:italic;
+  font-weight:500;
+  color:var(--seal);
+}
+.dek{
+  font-size:16.5px;
+  color:var(--ink-soft);
+  max-width:56ch;
+  line-height:1.55;
+  margin:0;
+}
+
+/* ---------- search panel ---------- */
+.search-panel{
+  margin-top:30px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+.search-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.search-row input[type=text]{
+  flex:1 1 320px;
+  font-family:'Source Serif 4', serif;
+  font-size:17px;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--paper);
+  color:var(--ink);
+}
+.search-row input[type=text]:focus{border-color:var(--seal);}
+select{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  padding:0 10px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--paper);
+  color:var(--ink-soft);
+  height:44px;
+}
+.btn{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  border:1px solid var(--ink);
+  background:var(--ink);
+  color:var(--paper);
+  padding:0 20px;
+  height:44px;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:transform .12s ease, background .12s ease;
+}
+.btn:hover{background:#33404F;}
+.btn:active{transform:translateY(1px);}
+.btn:disabled{opacity:.45; cursor:default;}
+.btn.secondary{
+  background:transparent;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+.btn.secondary:hover{border-color:var(--ink); background:transparent;}
+.btn.seal{
+  background:var(--seal);
+  border-color:var(--seal);
+}
+.btn.seal:hover{background:#265C51;}
+.filters{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.filters .hint{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--ink-faint);
+  margin-right:2px;
+}
+
+/* ---------- status / empty ---------- */
+.settings-row{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px dashed var(--line);
+}
+.settings-toggle{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  letter-spacing:.03em;
+  color:var(--ink-soft);
+  background:none;
+  border:none;
+  padding:0;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.settings-toggle:hover{color:var(--ink);}
+.dot{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--flag);
+  display:inline-block;
+}
+.dot.ok{background:var(--seal);}
+.settings-panel{
+  display:none;
+  margin-top:12px;
+}
+.settings-panel.open{display:block;}
+.settings-copy{
+  font-size:13px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  margin:0 0 10px;
+  max-width:64ch;
+}
+.settings-copy a{color:var(--seal);}
+.settings-fields{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.settings-fields input[type=password]{
+  flex:1 1 260px;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  padding:0 12px;
+  height:40px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--paper);
+  color:var(--ink);
+}
+.settings-fields select{height:40px;}
+.settings-fields .btn{height:40px; padding:0 16px;}
+.settings-status{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--ink-faint);
+  margin:10px 0 0;
+}
+.settings-status.ok{color:var(--seal);}
+
+.status-line{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  margin:22px 2px 16px;
+  min-height:16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.status-line.error{color:var(--flag);}
+.spinner{
+  width:11px;height:11px;
+  border:2px solid var(--line);
+  border-top-color:var(--seal);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.empty-state{
+  border:1px dashed var(--line);
+  border-radius:var(--radius);
+  padding:40px 24px;
+  text-align:center;
+  color:var(--ink-faint);
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  letter-spacing:.02em;
+}
+
+/* ---------- results ---------- */
+.results{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+  gap:16px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:18px 18px 16px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.card::before{
+  content:"";
+  position:absolute; top:0; left:16px; right:16px; height:0;
+  border-top:1px dashed var(--line);
+  transform:translateY(6px);
+  opacity:0;
+}
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+.meta-row{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:10.5px;
+  letter-spacing:.03em;
+  color:var(--ink-faint);
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.cat-pill{
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:1px 6px;
+  color:var(--seal);
+  background:var(--seal-dim);
+}
+.new-stamp{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:9.5px;
+  letter-spacing:.08em;
+  color:var(--flag);
+  border:1px solid var(--flag);
+  padding:1px 6px;
+  border-radius:2px;
+  transform:rotate(-3deg);
+  display:inline-block;
+}
+.card h3{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:18px;
+  line-height:1.28;
+  margin:0;
+}
+.card h3 a{color:var(--ink); text-decoration:none;}
+.card h3 a:hover{color:var(--seal);}
+.authors{
+  font-size:13px;
+  color:var(--ink-soft);
+  font-style:italic;
+  margin:0;
+}
+.abstract{
+  font-size:14px;
+  line-height:1.5;
+  color:var(--ink-soft);
+  margin:0;
+  display:-webkit-box;
+  -webkit-line-clamp:4;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.card-actions{
+  display:flex;
+  gap:8px;
+  margin-top:auto;
+  padding-top:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.mini-btn{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  letter-spacing:.02em;
+  background:none;
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  padding:6px 10px;
+  border-radius:2px;
+  cursor:pointer;
+}
+.mini-btn:hover{border-color:var(--ink); color:var(--ink);}
+.mini-btn.active{background:var(--highlight-dim); border-color:var(--highlight); color:#7A5B0E;}
+.select-wrap{
+  display:flex; align-items:center; gap:6px;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--ink-soft);
+  margin-left:auto;
+  cursor:pointer;
+  user-select:none;
+}
+.select-wrap input{accent-color:var(--seal); width:14px; height:14px;}
+.pdf-link{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--seal);
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+}
+.pdf-link:hover{border-bottom-color:var(--seal);}
+
+/* explain panel */
+.explain-panel{
+  border-top:1px dashed var(--line);
+  margin-top:4px;
+  padding-top:10px;
+  font-size:13.5px;
+  line-height:1.55;
+  color:var(--ink);
+  display:none;
+}
+.explain-panel.open{display:block;}
+.explain-panel .eq{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--seal);
+  display:block;
+  margin-bottom:2px;
+}
+.explain-panel .eblock{margin-bottom:8px;}
+.explain-loading{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11.5px;
+  color:var(--ink-faint);
+  display:flex; align-items:center; gap:8px;
+}
+
+/* ---------- selection tray ---------- */
+.tray{
+  position:sticky;
+  bottom:18px;
+  margin-top:26px;
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:var(--radius);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  padding:14px 18px;
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  z-index:20;
+}
+.tray.show{display:flex;}
+.tray-left{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  letter-spacing:.02em;
+}
+.tray-left b{color:var(--highlight); font-weight:500;}
+.tray-actions{display:flex; gap:10px;}
+
+/* ---------- report ---------- */
+.report{
+  margin-top:48px;
+  border-top:2px solid var(--ink);
+  padding-top:30px;
+}
+.report-head{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.report-head .kicker{margin-bottom:8px;}
+.report h2.rtitle{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:30px;
+  margin:0;
+  line-height:1.1;
+}
+.report .overview{
+  font-size:16px;
+  line-height:1.65;
+  color:var(--ink-soft);
+  max-width:70ch;
+  margin:14px 0 0;
+}
+.report-actions{display:flex; gap:8px;}
+
+.rsection{margin-top:38px;}
+.rsection > .slabel{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--seal);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+.rsection > .slabel::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+
+.paper-summary{
+  display:grid;
+  grid-template-columns:34px 1fr;
+  gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid var(--paper-dim);
+}
+.paper-summary .pnum{
+  font-family:'Fraunces', serif;
+  font-size:20px;
+  font-weight:600;
+  color:var(--line);
+}
+.paper-summary h4{
+  font-family:'Fraunces', serif;
+  font-size:16.5px;
+  font-weight:600;
+  margin:0 0 6px;
+}
+.paper-summary p{
+  font-size:14.5px;
+  line-height:1.6;
+  color:var(--ink-soft);
+  margin:0 0 6px;
+}
+.paper-summary .contrib{
+  font-size:13px;
+  color:var(--ink);
+  background:var(--paper-dim);
+  display:inline-block;
+  padding:3px 9px;
+  border-radius:2px;
+  margin-top:2px;
+}
+.paper-summary .contrib b{font-weight:600; color:var(--seal);}
+
+.synthesis-text{
+  font-size:16px;
+  line-height:1.75;
+  max-width:74ch;
+}
+.synthesis-text .cite{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  color:var(--seal);
+  vertical-align:super;
+}
+
+.gap-card{
+  position:relative;
+  background:var(--flag-dim);
+  border-left:3px solid var(--flag);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:16px 18px 16px 20px;
+  margin-bottom:14px;
+}
+.gap-flag{
+  position:absolute;
+  top:-9px; left:16px;
+  background:var(--highlight);
+  color:#3E2E06;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:9.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:2px 8px;
+  border-radius:2px;
+  transform:rotate(-2deg);
+  box-shadow:0 2px 4px rgba(0,0,0,.15);
+}
+.gap-card h4{
+  font-family:'Fraunces', serif;
+  font-size:16px;
+  font-weight:600;
+  margin:6px 0 6px;
+  color:#5C2417;
+}
+.gap-card p{
+  font-size:14px;
+  line-height:1.6;
+  color:#6B4436;
+  margin:0 0 8px;
+}
+.gap-card .related{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:10.5px;
+  color:var(--flag);
+}
+
+.references{list-style:none; margin:0; padding:0;}
+.references li{
+  font-size:13.5px;
+  line-height:1.6;
+  padding:9px 0;
+  border-bottom:1px solid var(--paper-dim);
+  display:flex;
+  gap:12px;
+}
+.references li .rnum{
+  font-family:'IBM Plex Mono', monospace;
+  color:var(--ink-faint);
+  min-width:20px;
+}
+.references li a{color:var(--seal); text-decoration:none;}
+.references li a:hover{text-decoration:underline;}
+
+.report-loading{
+  padding:60px 20px;
+  text-align:center;
+  color:var(--ink-soft);
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+}
+.report-loading .spinner{width:16px; height:16px; margin-bottom:14px;}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px 100px;}
+  header.hero{padding:38px 0 26px;}
+  .results{grid-template-columns:1fr;}
+  .tray{position:fixed; left:12px; right:12px; bottom:12px;}
+}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">arXiv · reading room</div>
+    <h1 class="title">Stacks<em>.</em></h1>
+    <p class="dek">Pull the latest arXiv papers on a topic, get each one explained in plain language, then have a free AI model draft a literature-review report that names the gaps still open in the field.</p>
+
+    <div class="search-panel">
+      <div class="search-row">
+        <input type="text" id="topicInput" placeholder="e.g. retrieval-augmented generation, protein folding, sim-to-real transfer…" autocomplete="off">
+        <select id="catSelect" title="Category">
+          <option value="">All categories</option>
+          <option value="cs.AI">cs.AI — Artificial Intelligence</option>
+          <option value="cs.LG">cs.LG — Machine Learning</option>
+          <option value="cs.CL">cs.CL — Computation & Language</option>
+          <option value="cs.CV">cs.CV — Computer Vision</option>
+          <option value="cs.RO">cs.RO — Robotics</option>
+          <option value="stat.ML">stat.ML — Statistics / ML</option>
+          <option value="q-bio">q-bio — Quantitative Biology</option>
+          <option value="physics">physics — Physics</option>
+          <option value="math">math — Mathematics</option>
+          <option value="econ">econ — Economics</option>
+          <option value="eess">eess — Electrical Eng & Systems</option>
+        </select>
+        <button class="btn seal" id="searchBtn">Search</button>
+      </div>
+      <div class="filters">
+        <span class="hint">sort:</span>
+        <select id="sortSelect">
+          <option value="submittedDate">Newest first</option>
+          <option value="relevance">Most relevant</option>
+        </select>
+        <span class="hint">results:</span>
+        <select id="countSelect">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+
+      <div class="settings-row" id="settingsRow">
+        <button class="settings-toggle" id="settingsToggle" type="button">
+          <span class="dot" id="keyDot"></span> AI model settings
+        </button>
+        <div class="settings-panel" id="settingsPanel">
+          <p class="settings-copy">Explanations and reports run on <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Groq</a>'s free API — fast, no cost, and you keep your own key (stored only in your browser for this app, never sent anywhere but Groq).</p>
+          <div class="settings-fields">
+            <input type="password" id="apiKeyInput" placeholder="Paste your free Groq API key (gsk_…)" autocomplete="off">
+            <select id="modelSelect">
+              <option value="openai/gpt-oss-120b">GPT-OSS 120B — best quality</option>
+              <option value="openai/gpt-oss-20b">GPT-OSS 20B — fastest</option>
+              <option value="qwen/qwen3.6-27b">Qwen3.6 27B — alternative</option>
+            </select>
+            <button class="btn secondary" id="saveKeyBtn" type="button">Save key</button>
+          </div>
+          <p class="settings-status" id="settingsStatus">No key saved yet — get one free at console.groq.com/keys, paste it above.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-line" id="statusLine"></div>
+  </header>
+
+  <div id="resultsWrap"></div>
+
+  <div class="tray" id="tray">
+    <div class="tray-left"><b id="trayCount">0</b> selected for the report</div>
+    <div class="tray-actions">
+      <button class="btn secondary" id="clearSelectionBtn" style="color:var(--paper); border-color:#555;">Clear</button>
+      <button class="btn" style="background:var(--highlight); border-color:var(--highlight); color:#3E2E06;" id="generateReportBtn">Generate literature review →</button>
+    </div>
+  </div>
+
+  <div id="reportWrap"></div>
+
+</div>
+
+<script>
+const state = {
+  papers: [],
+  selected: new Map(), // id -> paper
+  apiKey: '',
+  model: 'openai/gpt-oss-120b',
+};
+
+const el = {
+  topicInput: document.getElementById('topicInput'),
+  catSelect: document.getElementById('catSelect'),
+  sortSelect: document.getElementById('sortSelect'),
+  countSelect: document.getElementById('countSelect'),
+  searchBtn: document.getElementById('searchBtn'),
+  statusLine: document.getElementById('statusLine'),
+  resultsWrap: document.getElementById('resultsWrap'),
+  tray: document.getElementById('tray'),
+  trayCount: document.getElementById('trayCount'),
+  clearSelectionBtn: document.getElementById('clearSelectionBtn'),
+  generateReportBtn: document.getElementById('generateReportBtn'),
+  reportWrap: document.getElementById('reportWrap'),
+  settingsToggle: document.getElementById('settingsToggle'),
+  settingsPanel: document.getElementById('settingsPanel'),
+  apiKeyInput: document.getElementById('apiKeyInput'),
+  modelSelect: document.getElementById('modelSelect'),
+  saveKeyBtn: document.getElementById('saveKeyBtn'),
+  settingsStatus: document.getElementById('settingsStatus'),
+  keyDot: document.getElementById('keyDot'),
+};
+
+function setStatus(msg, opts = {}) {
+  el.statusLine.innerHTML = '';
+  el.statusLine.classList.toggle('error', !!opts.error);
+  if (opts.spinner) {
+    const s = document.createElement('span');
+    s.className = 'spinner';
+    el.statusLine.appendChild(s);
+  }
+  el.statusLine.appendChild(document.createTextNode(msg));
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function daysAgo(dateStr) {
+  const d = new Date(dateStr);
+  return (Date.now() - d.getTime()) / 86400000;
+}
+
+function fmtDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+// ---------- arXiv fetch ----------
+
+function buildSearchQuery(topic, category) {
+  const t = `all:${encodeURIComponent(topic.trim())}`;
+  if (category) return `cat:${encodeURIComponent(category)}*+AND+${t}`;
+  return t;
+}
+
+async function fetchArxivRaw(url) {
+  // Try a direct request first; arXiv's API does not reliably send CORS
+  // headers for browser fetches, so fall back to a public CORS relay.
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('direct fetch failed: ' + r.status);
+    return await r.text();
+  } catch (e) {
+    const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const r2 = await fetch(proxied);
+    if (!r2.ok) throw new Error('proxied fetch failed: ' + r2.status);
+    return await r2.text();
+  }
+}
+
+function parseAtom(xmlText) {
+  const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+  const errNode = doc.querySelector('parsererror');
+  if (errNode) throw new Error('Could not parse the response from arXiv.');
+  const entries = Array.from(doc.getElementsByTagName('entry'));
+  return entries.map(entry => {
+    const get = tag => {
+      const node = entry.getElementsByTagName(tag)[0];
+      return node ? node.textContent.trim() : '';
+    };
+    const idUrl = get('id'); // e.g. http://arxiv.org/abs/2401.01234v1
+    const shortId = idUrl.split('/abs/')[1] || idUrl;
+    const authors = Array.from(entry.getElementsByTagName('author'))
+      .map(a => (a.getElementsByTagName('name')[0] || {}).textContent)
+      .filter(Boolean);
+    const categories = Array.from(entry.getElementsByTagName('category'))
+      .map(c => c.getAttribute('term'))
+      .filter(Boolean);
+    const links = Array.from(entry.getElementsByTagName('link'));
+    const pdfLink = links.find(l => l.getAttribute('title') === 'pdf');
+    return {
+      id: shortId,
+      absUrl: idUrl,
+      pdfUrl: pdfLink ? pdfLink.getAttribute('href') : idUrl.replace('/abs/', '/pdf/'),
+      title: get('title').replace(/\s+/g, ' ').trim(),
+      summary: get('summary').replace(/\s+/g, ' ').trim(),
+      authors,
+      published: get('published'),
+      updated: get('updated'),
+      primaryCategory: categories[0] || '',
+      categories,
+    };
+  });
+}
+
+async function runSearch() {
+  const topic = el.topicInput.value.trim();
+  if (!topic) {
+    setStatus('Type a topic to search for — e.g. "diffusion models for audio".', { error: true });
+    return;
+  }
+  el.searchBtn.disabled = true;
+  setStatus('Searching arXiv…', { spinner: true });
+  el.resultsWrap.innerHTML = '';
+
+  const category = el.catSelect.value;
+  const sortBy = el.sortSelect.value;
+  const maxResults = el.countSelect.value;
+  const searchQuery = buildSearchQuery(topic, category);
+  const url = `https://export.arxiv.org/api/query?search_query=${searchQuery}&start=0&max_results=${maxResults}&sortBy=${sortBy}&sortOrder=descending`;
+
+  try {
+    const xml = await fetchArxivRaw(url);
+    const papers = parseAtom(xml);
+    state.papers = papers;
+    if (papers.length === 0) {
+      setStatus('');
+      el.resultsWrap.innerHTML = `<div class="empty-state">No papers matched “${escapeHtml(topic)}.” Try broader terms or drop the category filter.</div>`;
+      return;
+    }
+    setStatus(`${papers.length} paper${papers.length === 1 ? '' : 's'} found · sorted by ${sortBy === 'submittedDate' ? 'newest' : 'relevance'}`);
+    renderResults(papers);
+  } catch (e) {
+    console.error(e);
+    setStatus('Could not reach arXiv right now. Wait a moment and try again.', { error: true });
+  } finally {
+    el.searchBtn.disabled = false;
+  }
+}
+
+// ---------- render results ----------
+
+function renderResults(papers) {
+  el.resultsWrap.innerHTML = `<div class="results" id="resultsGrid"></div>`;
+  const grid = document.getElementById('resultsGrid');
+  papers.forEach(p => grid.appendChild(buildCard(p)));
+}
+
+function buildCard(paper) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.id = paper.id;
+
+  const isNew = daysAgo(paper.published) <= 21;
+  const year = (paper.published || '').slice(0, 4);
+
+  card.innerHTML = `
+    <div class="card-top">
+      <div class="meta-row">
+        ${paper.primaryCategory ? `<span class="cat-pill">${escapeHtml(paper.primaryCategory)}</span>` : ''}
+        <span>${fmtDate(paper.published)}</span>
+        ${isNew ? `<span class="new-stamp">new</span>` : ''}
+      </div>
+    </div>
+    <h3><a href="${paper.absUrl}" target="_blank" rel="noopener">${escapeHtml(paper.title)}</a></h3>
+    <p class="authors">${escapeHtml(paper.authors.slice(0,4).join(', '))}${paper.authors.length > 4 ? ', et al.' : ''}</p>
+    <p class="abstract">${escapeHtml(paper.summary)}</p>
+    <div class="card-actions">
+      <button class="mini-btn explain-toggle">Explain this paper</button>
+      <a class="pdf-link" href="${paper.pdfUrl}" target="_blank" rel="noopener">PDF ↗</a>
+      <label class="select-wrap">
+        <input type="checkbox" class="select-box">
+        add to report
+      </label>
+    </div>
+    <div class="explain-panel"></div>
+  `;
+
+  const checkbox = card.querySelector('.select-box');
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) state.selected.set(paper.id, paper);
+    else state.selected.delete(paper.id);
+    updateTray();
+  });
+
+  const explainBtn = card.querySelector('.explain-toggle');
+  const explainPanel = card.querySelector('.explain-panel');
+  explainBtn.addEventListener('click', () => onExplainClick(paper, explainBtn, explainPanel));
+
+  return card;
+}
+
+function updateTray() {
+  const n = state.selected.size;
+  el.trayCount.textContent = n;
+  el.tray.classList.toggle('show', n > 0);
+}
+
+el.clearSelectionBtn.addEventListener('click', () => {
+  state.selected.clear();
+  document.querySelectorAll('.select-box').forEach(cb => cb.checked = false);
+  updateTray();
+});
+
+// ---------- settings (Groq API key + model), persisted per-user ----------
+
+function refreshSettingsUI() {
+  el.keyDot.classList.toggle('ok', !!state.apiKey);
+  el.modelSelect.value = state.model;
+  if (state.apiKey) {
+    el.apiKeyInput.value = state.apiKey;
+    el.settingsStatus.textContent = 'Key saved — explanations and reports are ready to run.';
+    el.settingsStatus.classList.add('ok');
+  } else {
+    el.settingsStatus.textContent = 'No key saved yet — get one free at console.groq.com/keys, paste it above.';
+    el.settingsStatus.classList.remove('ok');
+  }
+}
+
+async function loadSettings() {
+  try {
+    const keyRes = await window.storage.get('groq-api-key', false);
+    if (keyRes && keyRes.value) state.apiKey = keyRes.value;
+  } catch (e) { /* nothing saved yet */ }
+  try {
+    const modelRes = await window.storage.get('groq-model', false);
+    if (modelRes && modelRes.value) state.model = modelRes.value;
+  } catch (e) { /* use default */ }
+  refreshSettingsUI();
+}
+
+async function saveSettings() {
+  const key = el.apiKeyInput.value.trim();
+  const model = el.modelSelect.value;
+  state.apiKey = key;
+  state.model = model;
+  try {
+    await window.storage.set('groq-api-key', key, false);
+    await window.storage.set('groq-model', model, false);
+  } catch (e) {
+    console.error('Could not save settings', e);
+  }
+  refreshSettingsUI();
+}
+
+el.settingsToggle.addEventListener('click', () => {
+  el.settingsPanel.classList.toggle('open');
+});
+el.saveKeyBtn.addEventListener('click', saveSettings);
+
+function requireApiKey() {
+  if (state.apiKey) return true;
+  el.settingsPanel.classList.add('open');
+  el.apiKeyInput.focus();
+  setStatus('Add a free Groq API key first — the field just opened above.', { error: true });
+  return false;
+}
+
+// ---------- Groq calls (free tier, OpenAI-compatible) ----------
+
+async function callClaude(promptText) {
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${state.apiKey}`,
+    },
+    body: JSON.stringify({
+      model: state.model,
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: promptText }],
+      response_format: { type: 'json_object' },
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    const msg = (data && data.error && data.error.message) || `Groq request failed (${response.status})`;
+    throw new Error(msg);
+  }
+  const text = (((data.choices || [])[0] || {}).message || {}).content || '';
+  return text;
+}
+
+function extractJson(text) {
+  const cleaned = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  const arrStart = cleaned.indexOf('[');
+  // handle either an object or a bare array response
+  if (start !== -1 && (arrStart === -1 || start < arrStart)) {
+    return JSON.parse(cleaned.slice(start, end + 1));
+  }
+  const aEnd = cleaned.lastIndexOf(']');
+  return JSON.parse(cleaned.slice(arrStart, aEnd + 1));
+}
+
+async function onExplainClick(paper, btn, panel) {
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    return;
+  }
+  if (!requireApiKey()) return;
+  panel.classList.add('open');
+
+  if (panel.dataset.loaded === '1') return; // already fetched once
+
+  panel.innerHTML = `<div class="explain-loading"><span class="spinner"></span> Reading the abstract…</div>`;
+
+  const prompt = `You are explaining an academic paper to a curious non-specialist. Base your answer only on the title and abstract given below — do not invent results, numbers, or methods that aren't stated.
+
+Title: ${paper.title}
+Abstract: ${paper.summary}
+
+Respond with ONLY a JSON object, no preamble, no markdown fences, in this exact shape:
+{"problem": "1-2 plain-language sentences on what problem/question the paper addresses", "approach": "1-2 sentences on what they did or built", "findings": "1-2 sentences on what they found or claim", "significance": "1 sentence on why it matters or who'd care"}`;
+
+  try {
+    const raw = await callClaude(prompt);
+    const j = extractJson(raw);
+    panel.dataset.loaded = '1';
+    panel.innerHTML = `
+      <div class="eblock"><span class="eq">The problem</span>${escapeHtml(j.problem || '')}</div>
+      <div class="eblock"><span class="eq">What they did</span>${escapeHtml(j.approach || '')}</div>
+      <div class="eblock"><span class="eq">What they found</span>${escapeHtml(j.findings || '')}</div>
+      <div class="eblock"><span class="eq">Why it matters</span>${escapeHtml(j.significance || '')}</div>
+    `;
+  } catch (e) {
+    console.error(e);
+    panel.innerHTML = `<div class="explain-loading" style="color:var(--flag);">${escapeHtml(e.message || "Couldn't generate an explanation just now")} — try again.</div>`;
+    panel.dataset.loaded = '';
+  }
+}
+
+// ---------- report generation ----------
+
+el.generateReportBtn.addEventListener('click', generateReport);
+
+async function generateReport() {
+  const papers = Array.from(state.selected.values());
+  if (papers.length === 0) return;
+  if (!requireApiKey()) return;
+
+  el.reportWrap.innerHTML = `
+    <div class="report">
+      <div class="report-loading"><span class="spinner"></span><div>Reading ${papers.length} paper${papers.length===1?'':'s'} and drafting the review…</div></div>
+    </div>`;
+  el.reportWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const paperList = papers.map((p, i) => (
+    `[${i+1}] id: ${p.id}\ntitle: ${p.title}\nauthors: ${p.authors.join(', ')}\nyear: ${(p.published||'').slice(0,4)}\nabstract: ${p.summary}`
+  )).join('\n\n');
+
+  const prompt = `You are a research assistant writing a concise literature-review section for a researcher. Use ONLY the paper metadata given below — never invent findings, numbers, or papers not listed. Reference papers by their bracket number [n] matching the list.
+
+PAPERS:
+${paperList}
+
+Write a literature review with:
+1. A short overview (2-3 sentences) framing what this set of papers collectively addresses.
+2. A one or two sentence plain-language summary of each paper's core contribution.
+3. A synthesis paragraph (4-6 sentences) connecting themes, agreements, and tensions across the papers, citing papers inline as [1], [2] etc.
+4. 2-4 genuine research gaps this set of papers exposes — things unaddressed, untested, or in conflict across the papers. Each gap must be grounded in specific papers from the list (reference them by number).
+
+Respond with ONLY a JSON object, no preamble, no markdown fences, in this exact shape:
+{
+  "overview": "string",
+  "papers": [{"index": 1, "contribution": "string, one sentence"}],
+  "synthesis": "string, may include [1] [2] style citations",
+  "gaps": [{"gap": "string, name the gap", "explanation": "string, 1-2 sentences on why it's a gap and for whom", "related": [1,2]}]
+}`;
+
+  try {
+    const raw = await callClaude(prompt);
+    const report = extractJson(raw);
+    renderReport(report, papers);
+  } catch (e) {
+    console.error(e);
+    el.reportWrap.innerHTML = `<div class="report"><div class="report-loading" style="color:var(--flag);">${escapeHtml(e.message || "The review didn't come together")} — try generating it again.</div></div>`;
+  }
+}
+
+function renderReport(report, papers) {
+  const contribByIndex = {};
+  (report.papers || []).forEach(p => { contribByIndex[p.index] = p.contribution; });
+
+  const paperSummaries = papers.map((p, i) => {
+    const n = i + 1;
+    return `
+      <div class="paper-summary">
+        <div class="pnum">${String(n).padStart(2,'0')}</div>
+        <div>
+          <h4><a href="${p.absUrl}" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">${escapeHtml(p.title)}</a></h4>
+          <p>${escapeHtml(p.authors.slice(0,3).join(', '))}${p.authors.length>3?', et al.':''} · ${(p.published||'').slice(0,4)}</p>
+          ${contribByIndex[n] ? `<span class="contrib"><b>Contribution —</b> ${escapeHtml(contribByIndex[n])}</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  const synthesisHtml = escapeHtml(report.synthesis || '').replace(/\[(\d+)\]/g, '<span class="cite">[$1]</span>');
+
+  const gapsHtml = (report.gaps || []).map(g => `
+    <div class="gap-card">
+      <div class="gap-flag">research gap</div>
+      <h4>${escapeHtml(g.gap || '')}</h4>
+      <p>${escapeHtml(g.explanation || '')}</p>
+      ${(g.related && g.related.length) ? `<div class="related">see ${g.related.map(n => `[${n}]`).join(' ')}</div>` : ''}
+    </div>
+  `).join('');
+
+  const referencesHtml = papers.map((p, i) => `
+    <li>
+      <span class="rnum">[${i+1}]</span>
+      <span>${escapeHtml(p.authors.slice(0,3).join(', '))}${p.authors.length>3?' et al.':''}. <a href="${p.absUrl}" target="_blank" rel="noopener">${escapeHtml(p.title)}</a>. arXiv:${p.id}, ${(p.published||'').slice(0,4)}.</span>
+    </li>
+  `).join('');
+
+  const topic = el.topicInput.value.trim();
+
+  el.reportWrap.innerHTML = `
+    <div class="report">
+      <div class="report-head">
+        <div>
+          <div class="kicker">literature review</div>
+          <h2 class="rtitle">${escapeHtml(topic || 'Selected papers')}</h2>
+          <p class="overview">${escapeHtml(report.overview || '')}</p>
+        </div>
+        <div class="report-actions">
+          <button class="btn secondary" id="downloadBtn">Download .md</button>
+        </div>
+      </div>
+
+      <div class="rsection">
+        <div class="slabel">Papers reviewed</div>
+        ${paperSummaries}
+      </div>
+
+      <div class="rsection">
+        <div class="slabel">Synthesis</div>
+        <p class="synthesis-text">${synthesisHtml}</p>
+      </div>
+
+      <div class="rsection">
+        <div class="slabel">Research gaps</div>
+        ${gapsHtml || '<p style="color:var(--ink-faint); font-family:\'IBM Plex Mono\',monospace; font-size:12.5px;">No clear gaps surfaced from this set — try adding more papers.</p>'}
+      </div>
+
+      <div class="rsection">
+        <div class="slabel">References</div>
+        <ul class="references">${referencesHtml}</ul>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('downloadBtn').addEventListener('click', () => downloadMarkdown(report, papers, topic));
+}
+
+function downloadMarkdown(report, papers, topic) {
+  let md = `# Literature Review: ${topic || 'Selected papers'}\n\n${report.overview || ''}\n\n## Papers reviewed\n\n`;
+  papers.forEach((p, i) => {
+    const n = i + 1;
+    const contrib = (report.papers || []).find(x => x.index === n);
+    md += `${n}. **${p.title}** — ${p.authors.join(', ')} (${(p.published||'').slice(0,4)})\n   ${contrib ? contrib.contribution : ''}\n   ${p.absUrl}\n\n`;
+  });
+  md += `## Synthesis\n\n${report.synthesis || ''}\n\n## Research gaps\n\n`;
+  (report.gaps || []).forEach(g => {
+    md += `- **${g.gap}** — ${g.explanation} ${(g.related||[]).length ? '(see ' + g.related.map(n=>'['+n+']').join(' ') + ')' : ''}\n`;
+  });
+  md += `\n## References\n\n`;
+  papers.forEach((p, i) => {
+    md += `[${i+1}] ${p.authors.join(', ')}. "${p.title}." arXiv:${p.id}, ${(p.published||'').slice(0,4)}. ${p.absUrl}\n`;
+  });
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `literature-review-${(topic || 'papers').toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40)}.md`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ---------- wire up ----------
+
+el.searchBtn.addEventListener('click', runSearch);
+el.topicInput.addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+
+loadSettings();
+</script>
